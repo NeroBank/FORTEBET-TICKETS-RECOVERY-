@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Row(children: [
+        
           title: Row(
   children: [
     Image.asset(
