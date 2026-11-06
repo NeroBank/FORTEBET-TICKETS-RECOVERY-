@@ -37,6 +37,9 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
 
+      - name: Generate ForteBet Android launcher icon
+        run: dart run flutter_launcher_icons
+
       - name: Build testing APK
         run: flutter build apk --debug
 
@@ -47,3 +50,4 @@ jobs:
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+          
