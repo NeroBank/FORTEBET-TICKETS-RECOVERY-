@@ -28,6 +28,9 @@ jobs:
         with:
           channel: stable
 
+      - name: Generate Android project files
+        run: flutter create --platforms=android --org com.fortbet .
+
       - name: Install dependencies
         run: flutter pub get
 
@@ -39,4 +42,3 @@ jobs:
         with:
           name: fortbet-ticket-recovery-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
