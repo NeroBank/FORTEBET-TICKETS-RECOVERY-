@@ -90,9 +90,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Row(children: [
-          Image.asset('assets/fortbet_logo.png', width: 42, height: 42),
+          Image.asset(
+            'assets/fortbet_logo.png',
+            width: 112,
+            height: 42,
+            fit: BoxFit.contain,
+          ),
           const SizedBox(width: 9),
-          const Expanded(child: Text('FORTBET TICKET RECOVERY',
+          const Expanded(child: Text('TICKET RECOVERY',
             style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14))),
         ]),
       ),
@@ -244,15 +249,9 @@ class _ReviewPageState extends State<ReviewPage> {
   late final stake = TextEditingController(text: findAmount('Placed bet'));
   late final odds = TextEditingController(text: RegExp(r'Total\s+Odds\s*:\s*([\d.]+)', caseSensitive: false).firstMatch(widget.rawText)?.group(1) ?? '');
   late final selections = TextEditingController(text: widget.rawText.split('\n').where((s) => s.contains(' - ')).join('\\n'));
-  late String result =
-    widget.rawText.toUpperCase().contains('WON') ? 'WON' : 'UNKNOWN';
-
-late String payment =
-    widget.rawText.toUpperCase().contains('UNPAID')
-        ? 'UNPAID'
-        : (widget.rawText.toUpperCase().contains('PAID')
-            ? 'PAID'
-            : 'UNKNOWN');
+  String result = widget.rawText.toUpperCase().contains('WON') ? 'WON' : 'UNKNOWN';
+  String payment = widget.rawText.toUpperCase().contains('UNPAID') ? 'UNPAID' :
+    (widget.rawText.toUpperCase().contains('PAID') ? 'PAID' : 'UNKNOWN');
 
   String findAmount(String label) {
     for (final line in widget.rawText.split('\n')) {
