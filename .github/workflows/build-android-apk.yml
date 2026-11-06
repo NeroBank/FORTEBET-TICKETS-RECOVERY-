@@ -37,14 +37,13 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
 
-      - name: Build release APK
-        run: flutter build apk --release --no-shrink
+      - name: Build testing APK
+        run: flutter build apk --debug
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: fortbet-ticket-recovery-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: fortbet-ticket-recovery-testing-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
-          
