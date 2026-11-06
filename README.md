@@ -1,41 +1,25 @@
-# FORTBET TICKET RECOVERY — Starter Project
+# ForteBet Ticket Recovery
 
-This ZIP contains a Flutter Android starter prototype.
+Flutter Android app for recording individual ticket details from terminal result screens.
 
 ## Included
-- Black/red/gold app theme and simple logo asset
+- ForteBet orange-and-white football app icon and matching in-app header
+- Black/red interface with a properly formatted Nigerian naira symbol (₦)
 - Camera capture and gallery import
 - On-device OCR using Google ML Kit
-- Review and edit OCR fields before saving
-- Local SQLite storage on the Android phone
-- Unique Ticket ID protection against duplicate records
-- Ticket ID search
-- Ticket history
-- Dashboard calculation for records marked WON + UNPAID
+- Editable review screen before saving
+- Local SQLite storage on the phone
+- Duplicate Ticket ID protection
+- Ticket ID search and ticket history
+- Outstanding winnings calculated only for records marked WON and UNPAID
 
 ## Important limitations
-- This is a prototype, not a production-ready financial or payment system.
-- It does not connect to Fortebet, alter the terminal, retrieve secure codes, or bypass verification.
-- A ticket's WON result is separate from its PAID/UNPAID status.
-- OCR can make mistakes. Compare all extracted fields with the terminal before saving.
-- The app does not independently prove that a ticket is genuine or unpaid. Confirm through Fortebet's authorised process.
-- No customer records or sample ticket IDs are preloaded.
+This is a local recordkeeping prototype. It does not connect to Fortebet, verify ticket authenticity, retrieve secure codes, or bypass terminal verification. Confirm each ticket and payment status through Fortebet's authorised process. OCR may misread details; review all fields before saving. No ticket records are preloaded.
 
-## Build APK on a computer with Flutter installed
-1. Extract this ZIP.
-2. Open a terminal inside the `fortbet_ticket_recovery` folder.
-3. Run `flutter pub get`.
-4. Connect an Android phone with USB debugging enabled.
-5. Run `flutter run`.
-6. To build a release APK, run `flutter build apk --release`.
-7. APK output: `build/app/outputs/flutter-apk/app-release.apk`.
+## Build with GitHub Actions
+The workflow is at `.github/workflows/build-android-apk.yml`. Push the project to GitHub, then open Actions and run **Build ForteBet Ticket Recovery APK**. Download the artifact named `fortebet-ticket-recovery-release-apk`.
 
-## GitHub Actions
-A starter workflow is included at `.github/workflows/build-android-apk.yml`. Push the project to a GitHub repository and run the workflow from the Actions tab.
+The workflow generates Android project files, creates the Android launcher icon from `assets/fortebet_football.png`, and builds a release APK.
 
-## Next stages
-1. Test and tune OCR against more terminal result screens.
-2. Add better field confidence indicators and Fortebet-specific parsing.
-3. Add encrypted backup/export.
-4. Add a customer collection audit trail.
-5. Add secure-code retrieval only if Fortebet provides written authorisation and a documented integration.
+## Local build
+Run `flutter pub get`, `dart run flutter_launcher_icons`, then `flutter build apk --release`.
