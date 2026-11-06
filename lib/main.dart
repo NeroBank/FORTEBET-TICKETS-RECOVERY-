@@ -249,10 +249,15 @@ class _ReviewPageState extends State<ReviewPage> {
   late final stake = TextEditingController(text: findAmount('Placed bet'));
   late final odds = TextEditingController(text: RegExp(r'Total\s+Odds\s*:\s*([\d.]+)', caseSensitive: false).firstMatch(widget.rawText)?.group(1) ?? '');
   late final selections = TextEditingController(text: widget.rawText.split('\n').where((s) => s.contains(' - ')).join('\\n'));
-  String result = widget.rawText.toUpperCase().contains('WON') ? 'WON' : 'UNKNOWN';
-  String payment = widget.rawText.toUpperCase().contains('UNPAID') ? 'UNPAID' :
-    (widget.rawText.toUpperCase().contains('PAID') ? 'PAID' : 'UNKNOWN');
+  late String result =
+    widget.rawText.toUpperCase().contains('WON') ? 'WON' : 'UNKNOWN';
 
+late String payment =
+    widget.rawText.toUpperCase().contains('UNPAID')
+        ? 'UNPAID'
+        : (widget.rawText.toUpperCase().contains('PAID')
+            ? 'PAID'
+            : 'UNKNOWN');
   String findAmount(String label) {
     for (final line in widget.rawText.split('\n')) {
       if (line.toLowerCase().contains(label.toLowerCase())) {
