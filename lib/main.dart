@@ -89,28 +89,14 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
       appBar: AppBar(
-        
-          title: Row(
-  children: [
-    Image.asset(
-      'assets/fortbet_logo.png',
-      width: 165,
-      height: 46,
-      fit: BoxFit.contain,
-    ),
-    const SizedBox(width: 8),
-    const Expanded(
-      child: Text(
-        'RECOVERY',
-        maxLines: 1,
-        style: TextStyle(
-          fontWeight: FontWeight.w900,
-          fontSize: 12,
-        ),
+  title: Row(
+    children: [
+      Image.asset(
+        'assets/fortbet_logo.png',
+        width: 165,
+        height: 46,
+        fit: BoxFit.contain,
       ),
-    ),
-  ],
-),
       const SizedBox(width: 8),
       const Expanded(
         child: Text(
@@ -122,6 +108,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    ],
+  ),
+),
     ],
   ),
 ),
