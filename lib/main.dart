@@ -89,32 +89,35 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
       appBar: AppBar(
-  title: Row(
-    children: [
-      Image.asset(
-        'assets/fortbet_logo.png',
-        width: 165,
-        height: 46,
-        fit: BoxFit.contain,
-      ),
-      const SizedBox(width: 8),
-      const Expanded(
-        child: Text(
-          'RECOVERY',
-          maxLines: 1,
-          style: TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 12,
-          ),
+        title: Row(
+          children: [
+            SizedBox(
+              width: 190,
+              height: 58,
+              child: Image.asset(
+                'assets/fortbet_logo.png',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.sports_soccer,
+                  size: 38,
+                  color: gold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Text(
+                'TICKET RECOVERY',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-    ],
-  ),
-),
-    ],
-  ),
-),
-        ]),
       ),
       body: pages[tab],
       bottomNavigationBar: NavigationBar(
@@ -142,7 +145,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text('OUTSTANDING WINNINGS', style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 8),
-          Text('₦${outstanding.toStringAsFixed(2)}',
+          Text('鈧�${outstanding.toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: gold)),
           Text('${records.where((r) => r['result_status'] == 'WON' && r['payment_status'] == 'UNPAID').length} unpaid winning tickets'),
         ]),
@@ -160,7 +163,7 @@ class _HomePageState extends State<HomePage> {
         color: panel,
         child: ListTile(
           title: Text('${r['ticket_id']}', style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('₦${r['winnings']} • ${r['result_status']} • ${r['payment_status']}'),
+          subtitle: Text('鈧�${r['winnings']} 鈥� ${r['result_status']} 鈥� ${r['payment_status']}'),
           trailing: const Icon(Icons.receipt_long),
         ),
       )),
@@ -178,7 +181,7 @@ class _HomePageState extends State<HomePage> {
       color: panel,
       child: ListTile(
         title: Text('${r['ticket_id']}'),
-        subtitle: Text('Result: ${r['result_status']}  |  Payment: ${r['payment_status']}\\n₦${r['winnings']}'),
+        subtitle: Text('Result: ${r['result_status']}  |  Payment: ${r['payment_status']}\\n鈧�${r['winnings']}'),
         isThreeLine: true,
       ),
     )),
@@ -359,6 +362,7 @@ class _SearchPageState extends State<SearchPage> {
     final rows = await (await TicketDb.database).query(
       'tickets', where: 'ticket_id = ?', whereArgs: [controller.text.trim()], limit: 1,
     );
+    if (!mounted) return;
     setState(() => found = rows.isEmpty ? null : rows.first);
   }
   @override
@@ -374,7 +378,7 @@ class _SearchPageState extends State<SearchPage> {
     FilledButton(onPressed: search, child: const Text('SEARCH')),
     if (found != null) Card(color: panel, child: ListTile(
       title: Text('${found!['ticket_id']}'),
-      subtitle: Text('₦${found!['winnings']} • ${found!['result_status']} • ${found!['payment_status']}'),
+      subtitle: Text('鈧�${found!['winnings']} 鈥� ${found!['result_status']} 鈥� ${found!['payment_status']}'),
     )),
   ]);
 }
