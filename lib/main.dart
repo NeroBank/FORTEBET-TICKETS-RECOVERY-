@@ -66,6 +66,12 @@ class TicketDb {
       (await database).query('tickets', orderBy: 'created_at DESC');
   static Future<void> save(Map<String, Object?> record) async =>
       (await database).insert('tickets', record, conflictAlgorithm: ConflictAlgorithm.abort);
+
+  static Future<void> deleteByTicketId(String ticketId) async =>
+      (await database).delete('tickets', where: 'ticket_id = ?', whereArgs: [ticketId]);
+
+  static Future<void> deleteAll() async =>
+      (await database).delete('tickets');
 }
 
 class HomePage extends StatefulWidget {
@@ -186,17 +192,111 @@ class _HomePageState extends State<HomePage> {
       ));
   }
 
-  Widget history() => ListView(padding: const EdgeInsets.all(16), children: [
-    const Text('Saved ticket history', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-    const SizedBox(height: 12),
-    if (records.isEmpty) const Text('No saved records.')
-    else ...records.map((record) => Card(color: panel, child: ListTile(
-      leading: const Icon(Icons.receipt_long, color: brandOrange),
-      title: Text('${record['ticket_id']}'),
-      subtitle: Text('Result: ${record['result_status']}  |  Payment: ${record['payment_status']}\n$naira${record['winnings']}'),
-      isThreeLine: true,
-    ))),
-  ]);
+  Future<void> deleteTicket(Map<String, Object?> record) async {
+    final ticketId = '${record['ticket_id']}';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete ticket record?'),
+        content: Text('This will permanently delete ticket $ticketId from this phone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('CANCEL'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: brandRed),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('DELETE'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await TicketDb.deleteByTicketId(ticketId);
+    await refresh();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Ticket record deleted.')),
+    );
+  }
+
+  Future<void> deleteAllHistory() async {
+    if (records.isEmpty) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete all history?'),
+        content: Text(
+          'This will permanently delete all ${records.length} saved ticket records from this phone. This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('CANCEL'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: brandRed),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('DELETE ALL'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await TicketDb.deleteAll();
+    await refresh();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('All ticket history has been deleted.')),
+    );
+  }
+
+  Widget history() => ListView(
+    padding: const EdgeInsets.all(16),
+    children: [
+      Row(
+        children: [
+          const Expanded(
+            child: Text(
+              'Saved ticket history',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),
+          if (records.isNotEmpty)
+            TextButton.icon(
+              onPressed: deleteAllHistory,
+              icon: const Icon(Icons.delete_sweep_outlined, color: brandRed),
+              label: const Text('Delete all', style: TextStyle(color: brandRed)),
+            ),
+        ],
+      ),
+      const SizedBox(height: 12),
+      if (records.isEmpty)
+        const Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Center(child: Text('No saved records.')),
+        )
+      else
+        ...records.map((record) => Card(
+          color: panel,
+          margin: const EdgeInsets.only(bottom: 9),
+          child: ListTile(
+            leading: const Icon(Icons.receipt_long, color: brandOrange),
+            title: Text('${record['ticket_id']}'),
+            subtitle: Text(
+              'Result: ${record['result_status']}  |  Payment: ${record['payment_status']}\n$naira${record['winnings']}',
+            ),
+            isThreeLine: true,
+            trailing: IconButton(
+              tooltip: 'Delete this ticket',
+              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              onPressed: () => deleteTicket(record),
+            ),
+          ),
+        )),
+    ],
+  );
 }
 
 class ScanPage extends StatefulWidget {
